@@ -20,9 +20,14 @@ class PermissionCubit extends Cubit<PermissionCubitState> {
   Future<void> requestPermission() async {
     emit(state.copyWith(status: BlocStatus.loading));
     final status = await Permission.location.request();
+
     emit(state.copyWith(
       status: BlocStatus.success,
       locationPermissionStatus: status,
     ));
+  }
+
+  Future<void> openSettings() async {
+    await openAppSettings();
   }
 }

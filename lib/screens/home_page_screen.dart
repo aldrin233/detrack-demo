@@ -207,56 +207,55 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 if (v == null) return;
                 _selectedValue = v;
               });
-              showDialog(
-                  context: context,
-                  builder: (c) {
-                    return Dialog(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('Last $v readings',
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall),
-                          ),
-                          Expanded(
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Scrollbar(
-                                thumbVisibility: true,
-                                trackVisibility: true,
-                                child: Flexible(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: v,
-                                    itemBuilder: (context, index) {
-                                      final loc = cleanList[index];
-                                      return ListTile(
-                                        leading: Icon(Icons.location_on),
-                                        title: Text(loc.address ?? 'Unknown'),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text('${loc.lat}, ${loc.long}'),
-                                            Text(DateFormat(
-                                                    'dd/MM/yyyy hh:mm aa')
-                                                .format(loc.date)),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  });
+              _buildDialog(v, cleanList);
             }),
       ),
     );
+  }
+
+  void _buildDialog(int? v, List<LocationInfo> cleanList) {
+    showDialog(
+        context: context,
+        builder: (c) {
+          return Dialog(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Last $v readings',
+                      style: Theme.of(context).textTheme.headlineSmall),
+                ),
+                Expanded(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      trackVisibility: true,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: v,
+                        itemBuilder: (context, index) {
+                          final loc = cleanList[index];
+                          return ListTile(
+                            leading: Icon(Icons.location_on),
+                            title: Text(loc.address ?? 'Unknown'),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${loc.lat}, ${loc.long}'),
+                                Text(DateFormat('dd/MM/yyyy hh:mm aa')
+                                    .format(loc.date)),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }

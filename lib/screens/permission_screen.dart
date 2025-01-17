@@ -59,20 +59,31 @@ class _PermissionScreenState extends State<PermissionScreen> {
   }
 
   Widget _buildPermissionButton() {
-    return BlocSelector<PermissionCubit, PermissionCubitState, bool>(
-      selector: (state) {
-        return state.status.isLoading;
-      },
-      builder: (context, isLoading) {
-        if (isLoading) {
+    return BlocBuilder<PermissionCubit, PermissionCubitState>(
+      builder: (context, state) {
+        if (state.status == BlocStatus.loading) {
           return CircularProgressIndicator();
         }
 
-        return OutlinedButton(
-          onPressed: () async {
-            await _cubit.requestPermission();
-          },
-          child: Text('request permission'),
+        return Column(
+          children: [
+            OutlinedButton(
+              onPressed: () async {
+                await _cubit.requestPermission();
+              },
+              child: Text('request permission'),
+            ),
+            if (state.locationPermissionStatus ==
+                PermissionStatus.permanentlyDenied)
+              OutlinedButton(
+                onPressed: () async {
+                  await _cubit.openSettings().then((v) {
+                    _cubit.checkPermissions();
+                  });
+                },
+                child: Text('Open settings'),
+              ),
+          ],
         );
       },
     );
